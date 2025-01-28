@@ -2,28 +2,29 @@ package com.vaibhavranga.medicalshopapp.navigation
 
 import kotlinx.serialization.Serializable
 
-sealed class SubGraph {
+sealed class RootNavGraph {
     @Serializable
-    data object Auth : SubGraph()
+    data object Auth : RootNavGraph()
 
     @Serializable
-    data object Dashboard : SubGraph()
+    data object Dash : RootNavGraph()
 }
 
-sealed class Routes {
+sealed class Authentication {
+    @Serializable
+    data object SignInScreenRoute : Authentication()
 
     @Serializable
-    data object SignInScreenRoute : Routes()
+    data object SignUpScreenRoute : Authentication()
+}
+
+sealed class Dashboard {
+    @Serializable
+    data object StocksScreenRoute : Dashboard()
 
     @Serializable
-    data object SignUpScreenRoute : Routes()
+    data object AddOrderScreenRoute : Dashboard()
 
     @Serializable
-    data object StocksScreenRoute : Routes()
-
-    @Serializable
-    data object AddOrderScreenRoute : Routes()
-
-    @Serializable
-    data object ProfileScreenRoute : Routes()
+    data object ProfileScreenRoute : Dashboard()
 }

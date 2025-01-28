@@ -1,16 +1,19 @@
 package com.vaibhavranga.medicalshopapp.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun StocksScreen(modifier: Modifier = Modifier) {
+fun StocksScreen() {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        Text(text = "Remaining stock")
+        Text(text = "Stock screen")
     }
 }

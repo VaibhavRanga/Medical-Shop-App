@@ -1,6 +1,7 @@
 package com.vaibhavranga.medicalshopapp.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -21,39 +22,40 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
+import com.vaibhavranga.medicalshopapp.navigation.Dashboard
 import com.vaibhavranga.medicalshopapp.navigation.RootNavGraph
-import com.vaibhavranga.medicalshopapp.navigation.Routes
 import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
 @Composable
 fun DashboardScreen(
+    navController: NavController,
     viewModel: ViewModel = hiltViewModel()
 ) {
-    val navController = rememberNavController()
     val bottomNavItems = listOf(
         BottomNavItem(
             name = "Stocks",
-            route = Routes.StocksScreenRoute,
+            route = Dashboard.StocksScreenRoute,
             unSelectedIcon = Icons.Outlined.Home,
-            selectedIcon = Icons.Default.Home,
+            selectedIcon = Icons.Filled.Home,
         ),
         BottomNavItem(
             name = "Order Product",
-            route = Routes.AddOrderScreenRoute,
+            route = Dashboard.AddOrderScreenRoute,
             unSelectedIcon = Icons.Outlined.ShoppingCart,
-            selectedIcon = Icons.Default.ShoppingCart
+            selectedIcon = Icons.Filled.ShoppingCart
         ),
         BottomNavItem(
             name = "Profile",
-            route = Routes.ProfileScreenRoute,
+            route = Dashboard.ProfileScreenRoute,
             unSelectedIcon = Icons.Outlined.AccountCircle,
-            selectedIcon = Icons.Default.AccountCircle
+            selectedIcon = Icons.Filled.AccountCircle
         )
     )
+    val navController1 = rememberNavController()
     var selectedNavItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -64,11 +66,7 @@ fun DashboardScreen(
                         selected = selectedNavItem == index,
                         onClick = {
                             selectedNavItem = index
-                            when (index) {
-                                0 -> navController.navigate(item.route)
-                                1 -> navController.navigate(item.route)
-                                2 -> navController.navigate(item.route)
-                            }
+                            navController1.navigate(item.route)
                         },
                         icon = {
                             Icon(
@@ -90,16 +88,21 @@ fun DashboardScreen(
         modifier = Modifier
             .fillMaxSize()
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination =) { }
-        navigation<RootNavGraph.Dashboard>(startDestination = Routes.StocksScreenRoute) {
 
-            composable<Routes.StocksScreenRoute> {
+        NavHost(
+            navController = navController1,
+            startDestination = Dashboard.StocksScreenRoute,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            composable<Dashboard.StocksScreenRoute> {
                 StocksScreen()
             }
-            composable<Routes.AddOrderScreenRoute> {
+            composable<Dashboard.AddOrderScreenRoute> {
                 AddOrderScreen()
             }
-            composable<Routes.ProfileScreenRoute> {
+            composable<Dashboard.ProfileScreenRoute> {
                 ProfileScreen(
                     onSignOutClick = {
                         viewModel.signOut()
@@ -111,9 +114,9 @@ fun DashboardScreen(
     }
 }
 
-    data class BottomNavItem(
-        val name: String,
-        val route: Routes,
-        val unSelectedIcon: ImageVector,
-        val selectedIcon: ImageVector
-    )
+data class BottomNavItem(
+    val name: String,
+    val route: Dashboard,
+    val unSelectedIcon: ImageVector,
+    val selectedIcon: ImageVector
+)

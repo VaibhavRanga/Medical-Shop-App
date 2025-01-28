@@ -33,7 +33,7 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.vaibhavranga.medicalshopapp.navigation.Routes
+import com.vaibhavranga.medicalshopapp.navigation.Authentication
 import com.vaibhavranga.medicalshopapp.ui.theme.MedicalShopAppTheme
 import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
@@ -55,7 +55,7 @@ fun SignInScreen(
     ) {
         SignInFields(
             onSignUpButtonClick = {
-                navController.navigate(Routes.SignUpScreenRoute)
+                navController.navigate(Authentication.SignUpScreenRoute)
             },
             onSignInButtonClick = { email, password ->
                 viewModel.login(email, password)
