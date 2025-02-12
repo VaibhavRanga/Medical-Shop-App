@@ -1,7 +1,6 @@
-package com.vaibhavranga.medicalshopapp.screen
+package com.vaibhavranga.medicalshopapp.screen.dash
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -22,17 +21,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vaibhavranga.medicalshopapp.navigation.Dashboard
-import com.vaibhavranga.medicalshopapp.navigation.RootNavGraph
+import com.vaibhavranga.medicalshopapp.navigation.navGraphs.DashNavGraph
 import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
 @Composable
 fun DashboardScreen(
-    navController: NavController,
+    rootNavController: NavHostController,
+    dashNavController: NavHostController = rememberNavController(),
     viewModel: ViewModel = hiltViewModel()
 ) {
     val bottomNavItems = listOf(
@@ -55,7 +53,6 @@ fun DashboardScreen(
             selectedIcon = Icons.Filled.AccountCircle
         )
     )
-    val navController1 = rememberNavController()
     var selectedNavItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -66,7 +63,7 @@ fun DashboardScreen(
                         selected = selectedNavItem == index,
                         onClick = {
                             selectedNavItem = index
-                            navController1.navigate(item.route)
+                            dashNavController.navigate(item.route)
                         },
                         icon = {
                             Icon(
@@ -88,29 +85,12 @@ fun DashboardScreen(
         modifier = Modifier
             .fillMaxSize()
     ) { innerPadding ->
-
-        NavHost(
-            navController = navController1,
-            startDestination = Dashboard.StocksScreenRoute,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            composable<Dashboard.StocksScreenRoute> {
-                StocksScreen()
-            }
-            composable<Dashboard.AddOrderScreenRoute> {
-                AddOrderScreen()
-            }
-            composable<Dashboard.ProfileScreenRoute> {
-                ProfileScreen(
-                    onSignOutClick = {
-                        viewModel.signOut()
-                        navController.navigate(RootNavGraph.Auth)
-                    }
-                )
-            }
-        }
+        DashNavGraph(
+            rootNavController = rootNavController,
+            dashNavController = dashNavController,
+            viewModel = viewModel,
+            innerPadding = innerPadding
+        )
     }
 }
 

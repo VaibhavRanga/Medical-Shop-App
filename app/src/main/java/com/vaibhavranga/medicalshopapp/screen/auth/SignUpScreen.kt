@@ -1,4 +1,4 @@
-package com.vaibhavranga.medicalshopapp.screen
+package com.vaibhavranga.medicalshopapp.screen.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -26,13 +26,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.vaibhavranga.medicalshopapp.navigation.Authentication
 import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
 @Composable
 fun SignUpScreen(
-    navController: NavController,
+    pendingApprovalForSignIn: () -> Unit,
     viewModel: ViewModel = hiltViewModel()
 ) {
     val state by viewModel.createUser.collectAsStateWithLifecycle()
@@ -177,9 +175,7 @@ fun SignUpScreen(
                             ) {
                                 Text(text = "Login to continue. Login is subject to approval of your account by admin.")
                                 Button(
-                                    onClick = {
-                                        navController.navigate(Authentication.SignInScreenRoute)
-                                    }
+                                    onClick = pendingApprovalForSignIn
                                 ) {
                                     Text(text = "Go to Login screen")
                                 }

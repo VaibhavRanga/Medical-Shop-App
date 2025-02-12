@@ -6,40 +6,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
-import com.vaibhavranga.medicalshopapp.screen.DashboardScreen
-import com.vaibhavranga.medicalshopapp.screen.SignInScreen
-import com.vaibhavranga.medicalshopapp.screen.SignUpScreen
+import com.vaibhavranga.medicalshopapp.navigation.navGraphs.authNavGraph
+import com.vaibhavranga.medicalshopapp.screen.dash.DashboardScreen
 
 @Composable
 fun App() {
-    val navController = rememberNavController()
+    val rootNavController = rememberNavController()
     NavHost(
-        navController = navController,
-        startDestination = RootNavGraph.Auth,
+        navController = rootNavController,
+        startDestination = NavGraph.AuthNavGraph,
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        navigation<RootNavGraph.Auth>(startDestination = Authentication.SignInScreenRoute) {
-
-            composable<Authentication.SignInScreenRoute> {
-                SignInScreen(
-                    navController = navController,
-                    onSignInSuccess = {
-                        navController.navigate(RootNavGraph.Dash)
-                    }
-                )
-            }
-            composable<Authentication.SignUpScreenRoute> {
-                SignUpScreen(
-                    navController = navController
-                )
-            }
-        }
-        composable<RootNavGraph.Dash> {
+        authNavGraph(rootNavController = rootNavController)
+        composable<NavGraph.DashNavGraph> {
             DashboardScreen(
-                navController = navController
+                rootNavController = rootNavController
             )
         }
     }

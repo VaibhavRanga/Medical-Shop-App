@@ -1,4 +1,4 @@
-package com.vaibhavranga.medicalshopapp.screen
+package com.vaibhavranga.medicalshopapp.screen.dash
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

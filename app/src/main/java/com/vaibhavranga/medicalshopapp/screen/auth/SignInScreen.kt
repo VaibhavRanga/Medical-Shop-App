@@ -1,4 +1,4 @@
-package com.vaibhavranga.medicalshopapp.screen
+package com.vaibhavranga.medicalshopapp.screen.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -39,8 +39,8 @@ import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
 @Composable
 fun SignInScreen(
-    navController: NavController,
     onSignInSuccess: () -> Unit,
+    onSignUpButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ViewModel = hiltViewModel()
 ) {
@@ -54,9 +54,7 @@ fun SignInScreen(
             .fillMaxSize()
     ) {
         SignInFields(
-            onSignUpButtonClick = {
-                navController.navigate(Authentication.SignUpScreenRoute)
-            },
+            onSignUpButtonClick = onSignUpButtonClick,
             onSignInButtonClick = { email, password ->
                 viewModel.login(email, password)
             },
