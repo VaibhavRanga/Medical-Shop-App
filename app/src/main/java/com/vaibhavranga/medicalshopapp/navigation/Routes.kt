@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 sealed class NavGraph {
     @Serializable
+    object Loading : NavGraph()
+
+    @Serializable
     object AuthNavGraph : NavGraph()
 
     @Serializable

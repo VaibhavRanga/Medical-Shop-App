@@ -16,7 +16,11 @@ fun NavGraphBuilder.authNavGraph(rootNavController: NavHostController) {
         composable<Authentication.SignInScreenRoute> {
             SignInScreen(
                 onSignInSuccess = {
-                    rootNavController.navigate(NavGraph.DashNavGraph)
+                    rootNavController.navigate(NavGraph.DashNavGraph) {
+                        popUpTo<NavGraph.AuthNavGraph> {
+                            inclusive = true
+                        }
+                    }
                 },
                 onSignUpButtonClick = {
                     rootNavController.navigate(Authentication.SignUpScreenRoute)

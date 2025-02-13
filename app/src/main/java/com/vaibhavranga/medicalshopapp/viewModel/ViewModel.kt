@@ -39,6 +39,12 @@ class ViewModel @Inject constructor(
     private val _addOrderState = MutableStateFlow(AddOrderState())
     val addOrderState = _addOrderState.asStateFlow()
 
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            getUserDetailsFromPrefs()
+        }
+    }
+
     suspend fun getUserDetailsFromPrefs() {
         prefs.getUserFromPrefs.collect {
             _userDetailsFromPrefs.value = it

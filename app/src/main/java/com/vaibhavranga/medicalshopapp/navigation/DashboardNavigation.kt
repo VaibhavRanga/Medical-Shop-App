@@ -1,4 +1,4 @@
-package com.vaibhavranga.medicalshopapp.screen.dash
+package com.vaibhavranga.medicalshopapp.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -15,20 +15,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.vaibhavranga.medicalshopapp.navigation.Dashboard
 import com.vaibhavranga.medicalshopapp.navigation.navGraphs.DashNavGraph
 import com.vaibhavranga.medicalshopapp.viewModel.ViewModel
 
 @Composable
-fun DashboardScreen(
+fun DashboardNavigation(
     rootNavController: NavHostController,
     dashNavController: NavHostController = rememberNavController(),
     viewModel: ViewModel = hiltViewModel()
@@ -53,30 +52,40 @@ fun DashboardScreen(
             selectedIcon = Icons.Filled.AccountCircle
         )
     )
-    var selectedNavItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                bottomNavItems.forEachIndexed { index, item ->
+                val navBackStackEntry by dashNavController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                bottomNavItems.forEach { navigationItem ->
                     NavigationBarItem(
-                        selected = selectedNavItem == index,
-                        onClick = {
-                            selectedNavItem = index
-                            dashNavController.navigate(item.route)
-                        },
                         icon = {
-                            Icon(
-                                imageVector = if (selectedNavItem == index) {
-                                    item.selectedIcon
-                                } else {
-                                    item.unSelectedIcon
-                                },
-                                contentDescription = item.name
-                            )
+                                Icon(
+                                    imageVector = if (currentDestination?.hierarchy?.any { it.hasRoute(navigationItem.route::class.toString(), arguments = null) } == true) {
+                                        navigationItem.selectedIcon
+                                    } else {
+                                        navigationItem.unSelectedIcon
+                                    },
+                                    contentDescription = navigationItem.name
+                                )
                         },
-                        label = {
-                            Text(text = item.name)
+                        label = { Text(navigationItem.name) },
+                        selected = currentDestination?.hierarchy?.any { it.hasRoute(navigationItem.route::class.toString(), arguments = null) } == true,
+                        onClick = {
+                            dashNavController.navigate(navigationItem.route) {
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                popUpTo(dashNavController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                // Avoid multiple copies of the same destination when
+                                // reselecting the same item
+                                launchSingleTop = true
+                                // Restore state when reselecting a previously selected item
+                                restoreState = true
+                            }
                         }
                     )
                 }

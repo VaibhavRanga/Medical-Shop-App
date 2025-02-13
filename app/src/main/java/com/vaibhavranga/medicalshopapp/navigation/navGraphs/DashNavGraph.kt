@@ -41,7 +41,11 @@ fun DashNavGraph(
                 ProfileScreen(
                     onSignOutClick = {
                         viewModel.signOut()
-                        rootNavController.navigate(NavGraph.AuthNavGraph)
+                        rootNavController.navigate(NavGraph.AuthNavGraph) {
+                            popUpTo<NavGraph.DashNavGraph> {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
