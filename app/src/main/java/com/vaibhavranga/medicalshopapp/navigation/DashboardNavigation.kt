@@ -58,11 +58,12 @@ fun DashboardNavigation(
             NavigationBar {
                 val navBackStackEntry by dashNavController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                bottomNavItems.forEach { navigationItem ->
+                bottomNavItems.forEachIndexed { index, navigationItem ->
+                    val isSelected = currentDestination?.hierarchy?.any { it.route == navigationItem.route::class.qualifiedName } == true
                     NavigationBarItem(
                         icon = {
                                 Icon(
-                                    imageVector = if (currentDestination?.hierarchy?.any { it.hasRoute(navigationItem.route::class.toString(), arguments = null) } == true) {
+                                    imageVector = if (isSelected) {
                                         navigationItem.selectedIcon
                                     } else {
                                         navigationItem.unSelectedIcon
@@ -71,7 +72,7 @@ fun DashboardNavigation(
                                 )
                         },
                         label = { Text(navigationItem.name) },
-                        selected = currentDestination?.hierarchy?.any { it.hasRoute(navigationItem.route::class.toString(), arguments = null) } == true,
+                        selected = isSelected,
                         onClick = {
                             dashNavController.navigate(navigationItem.route) {
                                 // Pop up to the start destination of the graph to
